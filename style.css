@@ -1,0 +1,35 @@
+body {
+    font-family: Arial;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+/* sets the 60:40 split of the columns*/ 
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-basis:60%;
+}
+
+.little-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+h1 {
+    text-align: center;
+}
+
+.point {
+    fill:blueviolet;
+}
+
+.point:hover {
+    fill:orange;
+}
