@@ -81,6 +81,7 @@ d3.csv("data/scatter-data.csv").then((data) => {
         }
     }
 
+    // add new points based on user feedback
     function addPoint() {
 
         // determine selected x coordinate
@@ -107,10 +108,6 @@ d3.csv("data/scatter-data.csv").then((data) => {
                     .on('click', changeCircle)
          }
 
-
-
-
-    document.getElementById('submit').addEventListener('click',addPoint);
 
   });
 
