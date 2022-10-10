@@ -1,8 +1,10 @@
-
+//global variables for storing x and y inputs
+var x;
+var y;
 // set dimensions for frame and margins
 const FRAME_HEIGHT = 500;
 const FRAME_WIDTH = 500; 
-const MARGINS = {left: 75, right: 75, top: 75, bottom: 75};
+const MARGINS = {left: 100, right: 100, top: 100, bottom: 100};
 
 // dimensions for scaling
 const VIS_HEIGHT = FRAME_HEIGHT - MARGINS.left - MARGINS.right;
@@ -17,7 +19,7 @@ const FRAME1 = d3.select("#scatter")
 
 // Open scatter-data and pass data into function
 d3.csv("data/scatter-data.csv").then((data) => { 
-  
+    // console.log(data);
     // find max X
     const MAX_X = d3.max(data, (d) => { return parseInt(d.x); });
 
@@ -56,25 +58,66 @@ d3.csv("data/scatter-data.csv").then((data) => {
     // Add an y-axis to the vis  
     FRAME1.append('g')  // g is a general SVG
     .attr('transform', "translate(" + MARGINS.left +
-        "," + (MARGINS.bottom) +")") // transform can transalte things by whatever you tell it, we want over a bit on x and down by top margin and visheight
+        "," + (MARGINS.bottom) +")") 
     .call(d3.axisLeft(Y_SCALE).ticks(4))
             .attr('font-size', '20px');
 
-    // click event handler to change outline of circle when clicked
-    var totalClicks = 0;
-    circles.on('click', function(d) {
-        if (totalClicks == 0 || totalClicks%2==0) {
-            console.log(d)
-            d3.select(this)
-              .attr("stroke", "greenyellow")
-              .attr("stroke-width", "5px");
-            totalClicks+=1;
-        } else {
-            d3.select(this)
-            .attr("stroke", "none");
-            totalClicks+=1;
-        }
 
-    })
+    // Add event listeners
+    FRAME1.selectAll(".point")
+    .on("click", changeCircle); //add event listeners    
+
+
+    // function to change the state of the circle (outline/no outline).
+    function changeCircle() {   
+        console.log(d3.select(this).attr('stroke'));
+        if(d3.select(this).attr('stroke') === 'greenyellow') {
+            d3.select(this)
+            .attr("stroke", "none")
+        } else{
+            d3.select(this)
+            .attr('stroke', 'greenyellow')
+            .attr("stroke-width", "5px");
+        }
+    }
+
+    function addPoint() {
+
+        // determine selected x coordinate
+        let x_list = document.getElementById('x-point');
+        x = x_list.options[x_list.selectedIndex].text;
+        console.log(x);
+
+        // determine selected y coordinate
+        let y_list = document.getElementById('y-point');
+        y = y_list.options[y_list.selectedIndex].text;
+        console.log(y)
+        data.push({'x':x, 'y':y});
+
+        FRAME1.selectAll('.point')
+            .remove()
+        FRAME1.selectAll('points')
+            .data(data) // passed from .then  
+            .enter()      
+            .append("circle")  
+                .attr("cx", (d) => { return (X_SCALE(d.x) + MARGINS.left);}) 
+                .attr("cy", (d) => { return (Y_SCALE(d.y) + MARGINS.top);}) 
+                .attr("r", 20)
+                .attr("class", "point")
+                    .on('click', changeCircle)
+         }
+
+
+
+
+    document.getElementById('submit').addEventListener('click',addPoint);
 
   });
+
+
+
+ 
+
+
+
+
